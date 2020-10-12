@@ -1,5 +1,14 @@
 <template>
   <div class="board-wrapper">
+    <div class="utility-button">
+      <IconButton @clicked="handleReset" customClass="reset-button">
+        <i class="fas fa-redo"></i>
+      </IconButton>
+
+      <IconButton @clicked="handleReset" customClass="setting-button">
+        <i class="fas fa-cog"></i>
+      </IconButton>
+    </div>
     <h3>Tic Tac Toe</h3>
 
     <div class="player-info">
@@ -35,13 +44,15 @@
 
 <script>
 import Vue from "vue";
-import Box from "./box";
+import Box from "./Box";
+import IconButton from "@/components/buttons/IconButton";
 
 import { checkWinner } from "@/utils/tic-tac-toe.js";
 
 export default {
   name: "Board",
-  components: { Box },
+  components: { Box, IconButton },
+
   data: () => ({
     boxesValue: Array(3)
       .fill(null)
@@ -53,6 +64,7 @@ export default {
     playerTwo: { name: "Player 2", sign: "0" },
     numberOfBoxFilled: 0
   }),
+
   methods: {
     handleButtonClick(boxIndex) {
       let [row, col] = boxIndex.split("");
@@ -83,6 +95,22 @@ export default {
     },
     isGameOver() {
       return this.winningPlayer || this.numberOfBoxFilled == 9 ? true : false;
+    },
+    handleReset() {
+      if (!this.isGameOver()) {
+        let reset = confirm("Wanna reset a game?");
+
+        if (!reset) {
+          return;
+        }
+      }
+      this.boxesValue = Array(3)
+        .fill(null)
+        .map(() => Array(3).fill(null));
+      this.isXTurn = Math.random() < 0.5;
+      this.winningPlayer = null;
+      this.winningSet = [];
+      this.numberOfBoxFilled = 0;
     }
   }
 };
@@ -92,12 +120,24 @@ export default {
 .board-wrapper {
   border-radius: 5px;
   width: 400px;
-  height: 450px;
+  min-height: 450px;
   padding: 2rem;
   margin: 2rem auto;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   display: flex;
   flex-direction: column;
+
+  .utility-button {
+    margin: -1rem -1rem 1rem auto;
+
+    .reset-button {
+      background: #d9534f;
+    }
+  }
+
+  .reload-btn {
+    color: white;
+  }
 
   .player-info {
     display: flex;
@@ -116,6 +156,15 @@ export default {
 
   .game-over {
     // margin: 0.5rem;
+  }
+
+  .reset-button {
+    background: #d9534f;
+    margin: 0.5rem;
+  }
+
+  .setting-button {
+    background: #f0ad4e;
   }
 }
 </style>

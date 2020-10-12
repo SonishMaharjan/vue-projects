@@ -18,9 +18,6 @@ export default {
   },
   methods: {
     handleClick(event) {
-      // alert("helo");
-      // debugger;
-
       this.$emit("clicked", event.target.dataset.boxName);
     }
   }
